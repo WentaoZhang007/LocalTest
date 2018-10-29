@@ -35,15 +35,15 @@ typedef enum _NDIS_802_11_AUTHENTICATION_MODE {
     Ndis802_11AuthModeWPA1WPA2,
     Ndis802_11AuthModeWPA1PSKWPA2PSK,
 #ifdef WAPI_SUPPORT
-    Ndis802_11AuthModeWAICERT,	/* WAI certificate authentication */
-    Ndis802_11AuthModeWAIPSK,	/* WAI pre-shared key */
-#endif		             		/* WAPI_SUPPORT */
-    Ndis802_11AuthModeMax	    /* Not a real mode, defined as upper bound */
+    Ndis802_11AuthModeWAICERT,    	/* WAI certificate authentication */
+    Ndis802_11AuthModeWAIPSK,	      /* WAI pre-shared key */
+#endif		             		     /* WAPI_SUPPORT */
+    Ndis802_11AuthModeMax	         /* Not a real mode, defined as upper bound */
 } NDIS_802_11_AUTHENTICATION_MODE;
 
 typedef enum _APSTORAGETYPE
 {
-    E_STORUNKNOWN,
+    E_STORUNKNOWN = -1,
     E_STORPRESET,
     E_STORUSERSET,
     E_STORNOAUTH
@@ -51,7 +51,7 @@ typedef enum _APSTORAGETYPE
 
 typedef enum _AP_SIGNAL_LEVL
 {
-    E_SIGNUNKNOWN,
+    E_SIGNUNKNOWN = -1,
     E_SIGNNOSIGNAL,
     E_SIGNWEAK,
     E_SIGNSTRONG
@@ -216,62 +216,66 @@ SV_S32 Wifi_APlist_sort(std::list<Wifi_AP_INFO_S> & APlist, const std::list<Wifi
     std::list<Wifi_AP_INFO_S>::const_iterator  itXML;
     std::list<Wifi_AP_INFO_S>::reverse_iterator  itAP;
     int n = 0;
-    
+
 
     for (itXML = XMLAPlist.cbegin(); itXML != XMLAPlist.cend(); itXML++)
     {
         //for (itAP = APlist.end(); itAP != APlist.begin(); )  
-        for (itAP = APlist.rbegin(); itAP != APlist.rend(); )  
+        for (itAP = APlist.rbegin(); itAP != APlist.rend(); )
         {
-            if (strcmp((*itAP).szSSID,(*itXML).szSSID)== 0 && (*itAP).E_sigLev == E_SIGNSTRONG)
+            if (strcmp((*itAP).szSSID, (*itXML).szSSID) == 0 && (*itAP).E_sigLev == E_SIGNSTRONG)
             {
                 printf("find AP in XML :%s.\n", (*itAP).szSSID);
                 APlist.push_front(*itAP);
                 *itAP;
                 std::list<Wifi_AP_INFO_S>::reverse_iterator itAPtemp = ++itAP;
-                APlist.erase((itAP).base());                
-                n++;     
+                APlist.erase((itAP).base());
+                n++;
                 break;
             }
-            else 
+            else
             {
                 itAP++;
             }
         }
-    }    
+    }
     return SV_SUCCESS;
 }
 
 
 
 /*
-»Áπ˚‘§…Ëifiø…”√£¨—°‘Ò‘§…ËWifi£ª
-»Áπ˚…Ëifi≤ªø…”√£®<=weak£©£¨—°‘Ò–≈∫≈◊Ó«øµƒ◊‘∂®“ÂWifi
-»Áπ˚◊‘∂®“ÂWifi≤ªø…”√£¨‘ÚÃ· æµØ¥∞°£
+Â¶ÇÊûúÈ¢ÑËÆæifiÂèØÁî®ÔºåÈÄâÊã©È¢ÑËÆæWifiÔºõ
+Â¶ÇÊûúËÆæifi‰∏çÂèØÁî®Ôºà<=weakÔºâÔºåÈÄâÊã©‰ø°Âè∑ÊúÄÂº∫ÁöÑËá™ÂÆö‰πâWifi
+Â¶ÇÊûúËá™ÂÆö‰πâWifi‰∏çÂèØÁî®ÔºåÂàôÊèêÁ§∫ÂºπÁ™ó„ÄÇ
 */
-SV_S32 Wifi_select( Wifi_AP_INFO_S & CurrentWifi, const std::list<Wifi_AP_INFO_S> & XML_list, const std::list<Wifi_AP_INFO_S> & AP_list)
+SV_S32 Wifi_select(Wifi_AP_INFO_S & CurrentWifi, const std::list<Wifi_AP_INFO_S> & AP_list)
 {
     int res = -1;
-    std::list<Wifi_AP_INFO_S>::const_iterator itXML, itAP;
+    std::list<Wifi_AP_INFO_S>::const_iterator itAP;
+
+    printf("Now SSID is :%s.\n", CurrentWifi.szSSID);
 
     if (CurrentWifi.E_sigLev == E_SIGNSTRONG)
     {
         printf("Aviable Wifi AP NO changed!\n");
         return 0;
     }
-    for ( itXML = XML_list.cbegin();itXML != XML_list.cend(); itXML++)
+
+    for (itAP = AP_list.cbegin(); itAP != AP_list.cend(); itAP++)
     {
-        for ( itAP = AP_list.cbegin(); itAP != AP_list.cend(); itAP++) 
+        if( (*itAP).E_storType  == E_STORPRESET || (*itAP).E_storType == E_STORUSERSET )
         {
-            if (strcmp((*itXML).szSSID, (*itAP).szSSID) == 0) 
-            {    
+            if ((*itAP).E_sigLev == E_SIGNSTRONG) 
+            {
                 CurrentWifi = (*itAP);
-                printf("Aviable Wifi AP changed!\n");
+                printf("Aviable Wifi AP changed to [%s]!\n",(*itAP).szSSID);
                 res = 1;
+                break;
             }
-        }       
+        }
     }
-    if (itXML == XML_list.cend()) 
+    if (itAP == AP_list.cend())
     {
         printf("Found No Aviable Wifi.\n");
         res = -1;
@@ -310,30 +314,20 @@ int main()
 
     Wifi_APlist_print(APlist);
     Wifi_APlist_print(XMLlist);
-    
-    cout << "sort..."<<endl;
+
+    cout << "sort..." << endl;
     Wifi_APlist_sort(APlist, XMLlist);
 
     Wifi_APlist_print(APlist);
 
-    cout <<"select..."<<endl;
-    Wifi_select(APlist.front(), XMLlist,APlist);
+    cout << "select..." << endl;
+    std::list<Wifi_AP_INFO_S>::iterator itTemp = APlist.begin();
+    std::advance(itTemp,6);
+    Wifi_select(*itTemp,  APlist);
 
     Wifi_APlist_print(APlist);
     //Wifi_APlist_print(XMLlist);
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Win64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "D:/Softs/VScode/Mingw64/include/*",
+                "D:/Softs/VScode/Mingw64/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/*",
+                "D:/Softs/VScode/Mingw64/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/x86_64-w64-mingw32/*",
+                "D:/Softs/VScode/Mingw64/lib/gcc/x86_64-w64-mingw32/7.2.0/include/c++/x86_64-w64-mingw32/backward/*"
+                
+                              
+            ],
+            "compilerPath":"C:\\Program Files\\LLVM\\bin\\g++.exe",
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 4
+}
+
