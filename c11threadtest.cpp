@@ -7,20 +7,20 @@
 int counter = 0;
 int maxSize = 30;
 std::mutex mtx;
-std::queue<int> dataQuene; // ±»Éú²úÕßºÍÏû·ÑÕß¹²Ïí 
-std::condition_variable producer, consumer;  // Ìõ¼ş±äÁ¿ÊÇÒ»ÖÖÍ¬²½»úÖÆ£¬ÒªºÍmutexÒÔ¼°lockÒ»ÆğÊ¹ÓÃ 
+std::queue<int> dataQuene; // è¢«ç”Ÿäº§è€…å’Œæ¶ˆè´¹è€…å…±äº« 
+std::condition_variable producer, consumer;  // æ¡ä»¶å˜é‡æ˜¯ä¸€ç§åŒæ­¥æœºåˆ¶ï¼Œè¦å’Œmutexä»¥åŠlockä¸€èµ·ä½¿ç”¨ 
 
 void func_consumer()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));// Ïû·ÑÕß±ÈÉú²úÕßÂı
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));// æ¶ˆè´¹è€…æ¯”ç”Ÿäº§è€…æ…¢
         std::unique_lock<std::mutex> lck(mtx);
-        consumer.wait(lck, [] {return dataQuene.size() != 0; });     // Ïû·ÑÕß×èÈûµÈ´ı£¬ Ö±µ½¶ÓÁĞÖĞÔªËØ¸öÊı´óÓÚ0
+        consumer.wait(lck, [] {return dataQuene.size() != 0; });     // æ¶ˆè´¹è€…é˜»å¡ç­‰å¾…ï¼Œ ç›´åˆ°é˜Ÿåˆ—ä¸­å…ƒç´ ä¸ªæ•°å¤§äº0
         int num = dataQuene.front();
         dataQuene.pop();
         std::cout << "consumer " << std::this_thread::get_id() << ": " << num << std::endl;
-        producer.notify_all();                                       // Í¨ÖªÉú²úÕßµ±¶ÓÁĞÖĞÔªËØ¸öÊıĞ¡ÓÚmaxSize
+        producer.notify_all();                                       // é€šçŸ¥ç”Ÿäº§è€…å½“é˜Ÿåˆ—ä¸­å…ƒç´ ä¸ªæ•°å°äºmaxSize
     }
 }
 
@@ -29,13 +29,13 @@ void func_producer()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(900));  // Éú²úÕßÉÔÎ¢±ÈÏû·ÑÕß¿ì
+        std::this_thread::sleep_for(std::chrono::milliseconds(900));  // ç”Ÿäº§è€…ç¨å¾®æ¯”æ¶ˆè´¹è€…å¿«
         std::unique_lock<std::mutex> lck(mtx);
-        producer.wait(lck, [] {return dataQuene.size() != maxSize; });// Éú²úÕß×èÈûµÈ´ı£¬ Ö±µ½¶ÓÁĞÖĞÔªËØ¸öÊıĞ¡ÓÚmaxSize
+        producer.wait(lck, [] {return dataQuene.size() != maxSize; });// ç”Ÿäº§è€…é˜»å¡ç­‰å¾…ï¼Œ ç›´åˆ°é˜Ÿåˆ—ä¸­å…ƒç´ ä¸ªæ•°å°äºmaxSize
         ++counter;
         dataQuene.push(counter);
         std::cout << "producer " << std::this_thread::get_id() << ": " << counter << std::endl;
-        consumer.notify_all();                                        //Í¨ÖªÏû·ÑÕßµ±¶ÓÁĞÖĞµÄÔªËØ¸öÊı´óÓÚ0
+        consumer.notify_all();                                        //é€šçŸ¥æ¶ˆè´¹è€…å½“é˜Ÿåˆ—ä¸­çš„å…ƒç´ ä¸ªæ•°å¤§äº0
     }
 }
 
@@ -44,7 +44,7 @@ int testSmartPoint_main()
 {
     std::thread consumers[2], producers[2];
 
-    // Á½¸öÉú²úÕßºÍÏû·ÑÕß
+    // ä¸¤ä¸ªç”Ÿäº§è€…å’Œæ¶ˆè´¹è€…
     for (int i = 0; i < 2; ++i)
     {
         consumers[i] = std::thread(func_consumer);

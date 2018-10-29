@@ -1,3 +1,4 @@
+
 {
     "files.associations": {
         "utility": "cpp",
@@ -46,7 +47,8 @@
         "xhash": "cpp",
         "xtree": "cpp",
         "chrono": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "fstream": "cpp"
     },
     "terminal.integrated.env.osx": {
         "SFDX_SET_CLIENT_IDS": "sfdx-vscode"
@@ -58,3 +60,6 @@
         "SFDX_SET_CLIENT_IDS": "sfdx-vscode"
     }
 }
+
+
+
