@@ -72,7 +72,7 @@ bool sortToken(const myclass & myclass1, const myclass & myclass2)
     return myclass1.name < myclass2.name;
 }
 
-int main() 
+int sort_test_main() 
 {
     vector<myclass> v;
     vector<myclass>::iterator it;

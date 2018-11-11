@@ -1,3 +1,2 @@
-﻿  unique.cpp
-d:\softs\localtest\vslocaltest\localtest\unique.cpp(40): warning C4091: “typedef ”: 没有声明变量时忽略“myclass”的左侧
+﻿  string_find.cpp
   Localtest.vcxproj -> D:\Softs\LocalTest\VSLocaltest\Localtest\x64\Debug\Localtest.exe

@@ -48,7 +48,22 @@
         "xtree": "cpp",
         "chrono": "cpp",
         "*.inc": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cctype": "cpp",
+        "condition_variable": "cpp",
+        "functional": "cpp",
+        "memory": "cpp",
+        "mutex": "cpp",
+        "ratio": "cpp",
+        "xthread": "cpp",
+        "thread": "cpp",
+        "unordered_map": "cpp",
+        "*.tcc": "cpp",
+        "clocale": "cpp",
+        "ctime": "cpp",
+        "cwctype": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp"
     },
     "terminal.integrated.env.osx": {
         "SFDX_SET_CLIENT_IDS": "sfdx-vscode"
