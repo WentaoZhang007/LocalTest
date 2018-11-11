@@ -15,7 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="string_enum.cpp">
+    <ClCompile Include="STL_Find.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="unique.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
