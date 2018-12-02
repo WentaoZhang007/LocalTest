@@ -1,0 +1,34 @@
+临时指令：
+
+文件路径：
+cd   /mnt/hgfs/Code/Debug
+
+编译命令：
+make clean
+make
+gcc -w -g -o ./debug/client ./src/client.c -I ./include
+gcc -w -g -o ./debug/socketwatchser ./src/socketWatchServer.c -I ./include
+gcc -w  -g -o ./debug/lookoutServerPS ./src/lookoutServerPS.c -I ./include
+
+调试指令：
+gdb -tui ./debug/lookoutServerPS
+
+
+测试方法：
+打开两个终端分别模拟客户端和服务器端，二者之间用Socket_IP进行通讯，终端1当中启动服务进程用于模拟服务器端口监听服务的启动和成功接收数据标志位的返回，
+终端2当中启动客户端进程用于模拟数据的发送和服务器成功标志的返回。
+
+终端1输入  ./debug/socketwatchser
+终端2输入  ./debug/client  127.0.0.1 (IP地址)
+终端1输入  ./debug/lookoutServerPS
+
+
+测试结果：
+客户端显示预发送的数据：abcde,xyz!,123,45
+服务器端显示数据：abcde,xyz!,123,45，并显示是否成功返回标志位给客户端。
+
+监控程序的作用是检测服务器端服务进程的状态、启动和杀死进程socketwatchser。注意启动进程的代码中含有绝对路径，位置在lookoutServerPS.c第111行,拷贝路径变化需要重新编译该文件。
+启动进程socketwatchser采用的方法是code=system("nohup /mnt/hgfs/Code/Debug/debug/socketwatchser & ");关闭终端后，该进程依然可以在后台运行。
+
+
+
